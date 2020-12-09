@@ -1,1 +1,4 @@
 main/secret_key.txt
+*.sqlite3
+.vscode
+SECRETS
