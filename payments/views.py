@@ -2,20 +2,25 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 import razorpay
-import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from pathlib import Path
+import random
+import datetime
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 KEY_ID = ''
 KEY_SECRET = ''
 
-with open(BASE_DIR + "/SECRETS/rzp_key_id.txt") as f:
+with open(BASE_DIR / "SECRETS/rzp_key_id.txt") as f:
     KEY_ID = f.read().strip()
 
-with open(BASE_DIR + "/SECRETS/rzp_key_secret.txt") as f:
+with open(BASE_DIR / "SECRETS/rzp_key_secret.txt") as f:
     KEY_SECRET = f.read().strip()
 
 client = razorpay.Client(auth=(str(KEY_ID), str(KEY_SECRET)))
+
+order_amount = random.randint(1, 9) * 10000
 
 
 def testing(request):
@@ -25,14 +30,19 @@ def testing(request):
 def create_order(request):
     context = {}
     if request.method == 'POST':
-        print("INSIDE Create Order!!!")
+        # print("INSIDE Create Order!!!")
+        # date = request.POST.get('date')
+        date1 = datetime.date.today()
+        date2 = datetime.datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
+        delta_date = date2 - date1
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         # products = request.POST.getlist('product')
-        # print(products)
+        # print(type(date1))
+        print(delta_date)
 
-        order_amount = 10000
+        # order_amount = 10000
         # if products == ['cb1']:
         #     order_amount = 1000
         # elif products == ['cb2']:
@@ -74,7 +84,14 @@ def create_order(request):
         if order_status == 'created':
             # Server data for user convenience
             # context['product_id'] = products
-            context['price'] = order_amount
+            context['date'] = date2
+            context['price'] = order_amount / 100
+            if int(str(delta_date).split()[0]) > 7:
+                context['per'] = 30
+                context['price_now'] = 0.3 * order_amount / 100
+            else:
+                context['per'] = 100
+                context['price_now'] = order_amount / 100
             context['name'] = name
             context['phone'] = phone
             context['email'] = email
