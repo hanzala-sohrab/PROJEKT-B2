@@ -3,3 +3,4 @@ main/secret_key.txt
 .vscode
 SECRETS
 .idea
+payments/__pycache__
