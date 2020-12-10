@@ -7,7 +7,7 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     </head>
     <body>
-        <div class="main-block" style="text-align: center;">
+        <div class="main-block">
             <form action="{% url 'payment_status' %}" method="POST">
                 {% csrf_token %}
                 <h1>Confirmation page</h1>
@@ -43,12 +43,12 @@
                         data-order_id="{{ order_id }}"
                         data-buttontext="Pay with Razorpay"
                         data-name="PROJEKT-B2"
-                        data-description="Your success is our mission"
+                        data-description="Description"
 {#                        data-image="{% static 'images/logo.png' %}"#}
                         data-prefill.name="{{ name }}"
                         data-prefill.email="{{ email }}"
                         data-prefill.contact="{{ phone }}"
-                        data-theme.color="#F37254"
+                        data-theme.color="#528FF0"
                 ></script>
                 <input type="hidden" custom="Hidden Element" name="hidden">
             </form>

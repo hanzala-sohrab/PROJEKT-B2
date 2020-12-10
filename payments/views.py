@@ -42,7 +42,11 @@ def create_order(request):
         # print(type(date1))
         print(delta_date)
 
-        # order_amount = 10000
+        amount = 10000
+        if int(str(delta_date).split()[0]) > 7:
+            amount = 0.3 * order_amount / 100
+        else:
+            amount = order_amount / 100
         # if products == ['cb1']:
         #     order_amount = 1000
         # elif products == ['cb2']:
@@ -77,7 +81,7 @@ def create_order(request):
 
         # CREATING ORDER
         response = client.order.create(
-            dict(amount=order_amount, currency=order_currency, receipt=order_receipt, notes=notes, payment_capture='0'))
+            dict(amount=amount * 100, currency=order_currency, receipt=order_receipt, notes=notes, payment_capture='0'))
         order_id = response['id']
         order_status = response['status']
 
@@ -88,10 +92,10 @@ def create_order(request):
             context['price'] = order_amount / 100
             if int(str(delta_date).split()[0]) > 7:
                 context['per'] = 30
-                context['price_now'] = 0.3 * order_amount / 100
+                context['price_now'] = amount
             else:
                 context['per'] = 100
-                context['price_now'] = order_amount / 100
+                context['price_now'] = amount
             context['name'] = name
             context['phone'] = phone
             context['email'] = email
@@ -103,7 +107,6 @@ def create_order(request):
 
             return render(request, 'confirm_order.html', context)
 
-        # print('\n\n\nresponse: ',response, type(response))
     return HttpResponse('<h1>Error in  create order function</h1>')
 
 
