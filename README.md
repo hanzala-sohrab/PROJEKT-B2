@@ -1,12 +1,28 @@
 # PROJEKT-B2
 
-**Razorpay**: https://razorpay.com/docs/payment-gateway/web-integration/standard
+## Tech-stack:
+- Django
+- HTML
+- CSS
+- JavaScript
+- Razorpay API
 
-**Step 1**: Create an Order from your Server
-```sh
-curl -u "rzp_test_WzfGn5FQwd8woZ":"fKTNimdLaYMJuBmEkeiIjdeR"  -X POST https://api.razorpay.com/v1/orders -H 'content-type:application/json' -d '{    "amount": 50000,    "currency": "INR",    "receipt": "rcptid_11"}'
-```
+## Steps to run the site locally
 
-**Step 2**:Pass Order Id and Other Options to the Checkout. Use `payment.html` for this.
+**STEP 1** : `git clone https://github.com/hanzala-sohrab/PROJEKT-B2.git`
 
-**Step 3**: Handle Payment Success and Failure.
+**STEP 2** : `pip install -r requirements.txt`
+
+**STEP 3** : Go to `main/settings.py` and provide a `SECRET KEY`
+
+**STEP 4** : Go to `payments/view.py` and provide your Razorpay `KEY_ID` and `KEY_SECRET`
+
+**STEP 5** : `python manage.py makemigrations`
+
+**STEP 6** : `python manage.py migrate`
+
+**STEP 7** : Create a superuser using `python manage.py createsuperuser`
+
+**STEP 8** : Run using `python manage.py runserver`
+
+**STEP 9** : In a browser, type in this URL - `127.0.0.1:8000/payments/`
