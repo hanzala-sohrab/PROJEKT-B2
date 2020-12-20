@@ -7,5 +7,4 @@ urlpatterns = [
     path('', testing),
     path('confirm_order', create_order, name = 'create_order'),
     path('payment_status', payment_status, name = 'payment_status'),
-    # path('payments/', include('payments.urls')),
 ]

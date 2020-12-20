@@ -7,6 +7,17 @@ from pathlib import Path
 import random
 import datetime
 
+from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+
+from .forms import SignUpForm
+
+from django.contrib.auth import authenticate, login, logout
+
+from django.contrib import messages
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 KEY_ID = ''
@@ -23,10 +34,12 @@ client = razorpay.Client(auth=(str(KEY_ID), str(KEY_SECRET)))
 order_amount = random.randint(1, 9) * 10000
 
 
+@login_required
 def testing(request):
     return render(request, 'order.html', {})
 
 
+@login_required
 def create_order(request):
     context = {}
     if request.method == 'POST':
@@ -110,6 +123,7 @@ def create_order(request):
     return HttpResponse('<h1>Error in  create order function</h1>')
 
 
+@login_required
 def payment_status(request):
     response = request.POST
 
@@ -125,3 +139,41 @@ def payment_status(request):
         return render(request, 'order_summary.html', {'status': 'Payment Successful'})
     except:
         return render(request, 'order_summary.html', {'status': 'Payment Failure!!!'})
+
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'You have successfully logged in')
+            return redirect("index")
+        else:
+            messages.success(request, 'Error logging in')
+            return redirect('login')
+    else:
+        return render(request, 'login.html', {})
+
+
+def logout_user(request):
+    logout(request)
+    messages.success(request, 'You have been logged out!')
+    print('logout function working')
+    return redirect('login')
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # username = form.cleaned_data.get('username')
+            # raw_password = form.cleaned_data.get('password1')
+            # user = authenticate(username=username, password=raw_password)
+            # login(request, user)
+            return redirect('create_order')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
